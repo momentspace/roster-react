@@ -1,5 +1,5 @@
 {
-  "name": "react-tutorial",
+  "name": "roster-react",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -22,5 +22,8 @@
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
     "webpack-init": "^0.1.0"
+  },
+  "dependencies": {
+    "react-bootstrap": "^0.29.5"
   }
 }
