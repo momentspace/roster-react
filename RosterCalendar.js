@@ -2,9 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import AtWork from './AtWork'
 import LeaveWork from './LeaveWork'
-import { FormGroup, Panel, Col, ControlLabel } from 'react-bootstrap'
+import AtWorkKind from './AtWorkKind'
+import WorkKind from './WorkKind'
+import Outing from './Outing'
+import { FormGroup, Panel, Col, ControlLabel, Table } from 'react-bootstrap'
 
 export default React.createClass({
+  propTypes: {
+    month: React.PropTypes.number.isRequested,
+    month: React.PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+  },
+
   getDefaultProps() {
     return {
     }
@@ -14,12 +22,22 @@ export default React.createClass({
     }
   },
 
+  monthToDays(month) {
+    if (month == '') return []
+    var year = new Date().getYear() + 1900
+    var daysCount = new Date(parseInt(year, 10), parseInt(month, 10), 0).getDate()
+    var days = [...Array(daysCount+1).keys()]
+    days.shift()
+    return days
+  },
+
   render() {
-    console.log(days)
     console.log(month)
 
-    var days = this.props.days
     var month = this.props.month
+    var days = this.monthToDays(this.props.month)
+    var kind = 1
+    var defaultKind = 1
 
     if (month == '') {
       return <div className="rosterCalendar"></div>
@@ -29,37 +47,50 @@ export default React.createClass({
         <FormGroup className="rosterCalendar" controlId="rosterCalendar">
           <h2>{month}月の勤務表</h2>
           <FormGroup controlId="formMonthBox">
-            <Col sm={1} componentClass={ControlLabel}>日　曜日</Col>
-            <Col sm={1} componentClass={ControlLabel}>出勤区分</Col>
-            <Col sm={1} componentClass={ControlLabel}>勤務区分</Col>
-            <Col sm={1} componentClass={ControlLabel}>出勤時刻</Col>
-            <Col sm={1} componentClass={ControlLabel}>退勤時刻</Col>
-            <Col sm={1} componentClass={ControlLabel}>時間内作業時間</Col>
-            <Col sm={1} componentClass={ControlLabel}>休憩時間</Col>
-            <Col sm={1} componentClass={ControlLabel}>普通残業</Col>
-            <Col sm={1} componentClass={ControlLabel}>深夜残業</Col>
-            <Col sm={1} componentClass={ControlLabel}>深夜勤務</Col>
-            <Col sm={1} componentClass={ControlLabel}>私用外出</Col>
-            <Col sm={1} componentClass={ControlLabel}>実働時間</Col>
+            <Table striped bordered condensed hover>
+              <thead>
+                <tr>
+                  <th>日</th>
+                  <th>曜日</th>
+                  <th>出勤区分</th>
+                  <th>勤務区分</th>
+                  <th>出勤時刻</th>
+                  <th>退勤時刻</th>
+                  <th>時間内作業時間</th>
+                  <th>休憩時間</th>
+                  <th>普通残業</th>
+                  <th>深夜残業</th>
+                  <th>深夜勤務</th>
+                  <th>私用外出</th>
+                  <th>実働時間</th>
+                </tr>
+              </thead>
+              <tbody>
+              {
+                days.map(function(day) {
+                  return (
+                    <tr>
+                      <td key="label{day}">{day}</td>
+                      <td>曜日</td>
+                      <td><AtWorkKind kind={kind}/></td>
+                      <td><WorkKind kind={defaultKind}/></td>
+                      <td><AtWork key="AtWork{day}" /></td>
+                      <td><LeaveWork key="LeaveWork{day}" /></td>
+                      <td>00:00</td>
+                      <td>00:00</td>
+                      <td>00:00</td>
+                      <td>00:00</td>
+                      <td>00:00</td>
+                      <td><Outing /></td>
+                      <td>00:00</td>
+                    </tr>
+                  )
+                })
+              }
+              </tbody>
+             </Table>
           </FormGroup>
-           {
-            this.props.days.map(function(day) {
-              return (
-                <FormGroup controlId="formMonthBox">
-                  <Col sm={1} componentClass={ControlLabel} key="label{day}">{day} 月</Col>
-                  <Col sm={1} componentClass={ControlLabel}>平日</Col>
-                  <Col sm={1} componentClass={ControlLabel}>通常</Col>
-                  <Col sm={1}>
-                    <AtWork key="AtWork{day}" />
-                  </Col>
-                  <Col sm={1}>
-                    <LeaveWork key="LeaveWork{day}" />
-                  </Col>
-                </FormGroup>
-              )
-            })
-          }
-        </FormGroup>
+       </FormGroup>
       </Col>
     )
   }

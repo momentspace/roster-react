@@ -19,7 +19,7 @@ export default React.createClass({
     return (
       <FormGroup controlId="formMonthBox">
         <Col sm={2} componentClass={ControlLabel}>勤務月</Col>
-        <Col sm={6}>
+        <Col sm={1}>
           <FormControl type="text" value={this.state.month} onChange={this.changeMonth} />
         </Col>
       </FormGroup>
